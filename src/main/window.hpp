@@ -7,12 +7,12 @@
 #define FAILED_GLFW_INITIALIZATION 1;
 #define FAILED_WINDOW_CREATION 2;
 
-const int initialize(const GLFWwindow *window);
+const int initialize(const GLFWwindow* window);
 
-void glfw_error_callback(int error, const char *description);
+void glfw_error_callback(int error, const char* description);
 
-const GLFWwindow *create_window(const int width = 640, const int height = 480,
-                                const char *title = "Hawk");
+const GLFWwindow* create_window(const int width = 640, const int height = 480,
+                                const char* title = "Hawk");
 
 void set_minimum_opengl_requirements();
 
