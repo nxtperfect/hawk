@@ -1,1 +1,4 @@
 todo.org
+build/
+ninja/
+shell.sh
