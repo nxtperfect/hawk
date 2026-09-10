@@ -1,10 +1,9 @@
 #include <GLFW/glfw3.h>
-#include <glad/gl.h>
-#include <window.hpp>
+#include "window.hpp"
 
 int main() {
-  const GLFWwindow* window = create_window();
+  const GLFWwindow* window = createWindowPointer();
   initialize(window);
-  glfw_cleanup();
+  cleanup();
   return 0;
 }
