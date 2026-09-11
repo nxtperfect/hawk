@@ -1,17 +1,22 @@
 #pragma once
 
-#define GLAD_GL_IMPLEMENTATION
-#include <glad/gl.h>
-#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-enum class InitResult {
-  SUCCESS,
+enum class InitError {
+  NONE,
   GLFW_INITIALIZATION_FAILED,
-  WINDOW_CREATION_FAILED
+  WINDOW_CREATION_FAILED,
+  CONTEXT_CREATION_FAILED
 };
 
-InitResult  initializeCallbacks(GLFWwindow* window);
+struct InitResult {
+  GLFWwindow* window;
+  InitError   error;
+};
+
+InitResult  initialize();
+
+void        initializeCallbacks(GLFWwindow* window);
 
 void        setBufferSwapInterval(const int interval = 1);
 
@@ -23,6 +28,6 @@ void        setOpenGLRequirements();
 
 void        cleanup();
 
-void        makeContextCurrent();
+bool        makeContextCurrent(GLFWwindow* window);
 
 void        run(GLFWwindow* window);
