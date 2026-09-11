@@ -2,7 +2,7 @@
 # Posted by Arne, modified by community. See post 'Timeline' for change history
 # Retrieved 2026-09-10, License - CC BY-SA 4.0
 
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
 project(hawk)
 
 ###############################################################################
@@ -26,7 +26,7 @@ file(GLOB_RECURSE sources_test src/test/*.cpp)
 add_executable(hawk ${sources})# ${data})
 
 # just for example add some compiler flags
-target_compile_options(hawk PUBLIC -std=c++1y -Wall -Wfloat-conversion)
+target_compile_options(hawk PUBLIC -std=c++1y -Wall -Wfloat-conversion -Wextra -Wpedantic -Wconversion -Wshadow -Werror)
 
 # this lets me include files relative to the root source directory with a <> pair
 target_include_directories(hawk PUBLIC src/main)
@@ -39,14 +39,20 @@ target_include_directories(hawk PUBLIC src/main)
 ## dependencies ###############################################################
 ###############################################################################
 
-# this defines the variables Boost_LIBRARIES that contain all library names
-# that we need to link to
-#find_package(Boost 1.36.0 COMPONENTS filesystem system REQUIRED)
+find_package(glfw3 CONFIG REQUIRED)
 
-#target_link_libraries(example PUBLIC
-  #${Boost_LIBRARIES}
-  # here you can add any library dependencies
-#)
+add_library(glad STATIC
+    glad/src/gl.c
+)
+
+target_include_directories(glad PUBLIC
+    glad/include
+)
+
+target_link_libraries(hawk PRIVATE
+  glfw
+  glad
+)
 
 ###############################################################################
 ## testing ####################################################################
@@ -54,9 +60,9 @@ target_include_directories(hawk PUBLIC src/main)
 
 # this is for our testing framework
 # we don't add REQUIRED because it's just for testing
-find_package(GTest)
+find_package(doctest)
 
-if(GTEST_FOUND)
+if(DOCTEST_FOUND)
   add_executable(unit_tests ${sources_test} ${sources})
 
   # we add this define to prevent collision with the main
@@ -66,15 +72,15 @@ if(GTEST_FOUND)
 
   # this allows us to use our executable as a link library
   # therefore we can inherit all compiler options and library dependencies
-  set_target_properties(example PROPERTIES ENABLE_EXPORTS on)
+  set_target_properties(hawk PROPERTIES ENABLE_EXPORTS on)
 
   target_link_libraries(unit_tests PUBLIC
-    ${GTEST_BOTH_LIBRARIES}
+    ${DOCTEST_BOTH_LIBRARIES}
     hawk
   )
 
   target_include_directories(unit_tests PUBLIC
-    ${GTEST_INCLUDE_DIRS} # doesn't do anything on Linux
+    ${DOCTEST_INCLUDE_DIRS} # doesn't do anything on Linux
   )
 endif()
 

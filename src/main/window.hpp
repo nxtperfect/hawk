@@ -1,25 +1,28 @@
-#ifndef WINDOW_H_
-#define WINDOW_H_
+#pragma once
 
+#define GLAD_GL_IMPLEMENTATION
+#include <glad/gl.h>
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-#define FAILED_GLFW_INITIALIZATION 1
-#define FAILED_WINDOW_CREATION 2
+enum class InitResult {
+  SUCCESS,
+  GLFW_INITIALIZATION_FAILED,
+  WINDOW_CREATION_FAILED
+};
 
-const int   initialize(GLFWwindow* window);
+InitResult  initializeCallbacks(GLFWwindow* window);
 
-void        errorCallback(int error, const char* description);
+void        setBufferSwapInterval(const int interval = 1);
 
-GLFWwindow* createWindowPointer(const int   width  = 640,
-                                const int   height = 480,
-                                const char* title  = "Hawk");
+GLFWwindow* createWindow(const int   width  = 640,
+                         const int   height = 480,
+                         const char* title  = "Hawk");
 
-void        setOpenglRequirements();
+void        setOpenGLRequirements();
 
 void        cleanup();
 
 void        makeContextCurrent(GLFWwindow* window);
 
 void        run(GLFWwindow* window);
-
-#endif  // WINDOW_H_

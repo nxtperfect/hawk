@@ -1,20 +1,22 @@
-#include "window.hpp"
 #include <cstdlib>
-// #define GLAD_GL_IMPLEMENTATION
-// #include <glad/gl.h>
+#include <window.hpp>
+#define GLAD_GL_IMPLEMENTATION
+#include <glad/gl.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <cstdio>
 
 void run(GLFWwindow* window) {
+  setBufferSwapInterval();
+
   while (!glfwWindowShouldClose(window)) {
+    glfwPollEvents();
+
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
     glViewport(0, 0, width, height);
 
     glfwSwapBuffers(window);
-
-    glfwPollEvents();
   }
 }
 
@@ -23,27 +25,33 @@ static void keyCallback(GLFWwindow* window,
                         int         scancode,
                         int         action,
                         int         mods) {
-  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+  (void)scancode;
+  (void)mods;
+  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, GLFW_TRUE);
+  }
 }
 
-const int initialize(GLFWwindow* window) {
+void errorCallback(int error, const char* description) {
+  fprintf(stderr, "Error %d: %s\n", error, description);
+}
+
+InitResult initializeCallbacks(GLFWwindow* window) {
   glfwSetErrorCallback(errorCallback);
 
   if (!glfwInit()) {
-    return FAILED_GLFW_INITIALIZATION;
+    return InitResult::GLFW_INITIALIZATION_FAILED;
   }
 
   makeContextCurrent(window);
 
   glfwSetKeyCallback(window, keyCallback);
 
-  glfwSwapInterval(1);
-  return 0;
+  return InitResult::SUCCESS;
 }
 
-void errorCallback(int error, const char* description) {
-  fprintf(stderr, "Error: %s\n", description);
+void setBufferSwapInterval(const int interval) {
+  glfwSwapInterval(interval);
 }
 
 void makeContextCurrent(GLFWwindow* window) {
@@ -53,13 +61,11 @@ void makeContextCurrent(GLFWwindow* window) {
 }
 
 /* On window failure returns empty pointer
- * uses default arguments of 640x480 pixels with "Hawk" title
- * requires minimum glfw 3.3 core profile
+ * uses default arguments of 640x480 with "Hawk" title
+ * requires opengl 4.6 core profile
  */
-GLFWwindow* createWindowPointer(const int   width,
-                                const int   height,
-                                const char* title) {
-  setOpenglRequirements();
+GLFWwindow* createWindow(const int width, const int height, const char* title) {
+  setOpenGLRequirements();
 
   GLFWwindow* window = glfwCreateWindow(width, height, title, NULL, NULL);
   if (!window) {
@@ -70,10 +76,10 @@ GLFWwindow* createWindowPointer(const int   width,
   return window;
 }
 
-// Set required version to opengl 3.3 with core profile
-void setOpenglRequirements() {
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+// Set required version to opengl 4.6 with core profile
+void setOpenGLRequirements() {
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 }
 
