@@ -1,4 +1,3 @@
-#include <cstdlib>
 #include <window.hpp>
 #define GLAD_GL_IMPLEMENTATION
 #include <glad/gl.h>
@@ -43,7 +42,7 @@ InitResult initializeCallbacks(GLFWwindow* window) {
     return InitResult::GLFW_INITIALIZATION_FAILED;
   }
 
-  makeContextCurrent(window);
+  makeContextCurrent();
 
   glfwSetKeyCallback(window, keyCallback);
 
@@ -54,10 +53,10 @@ void setBufferSwapInterval(const int interval) {
   glfwSwapInterval(interval);
 }
 
-void makeContextCurrent(GLFWwindow* window) {
-  glfwMakeContextCurrent(window);
+void makeContextCurrent() {
+  // glfwMakeContextCurrent(window);
   // HACK once glad works use below
-  // gladLoadGL(glfwGetProcAddress);
+  gladLoadGL(glfwGetProcAddress);
 }
 
 /* On window failure returns empty pointer

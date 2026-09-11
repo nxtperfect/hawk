@@ -23,6 +23,6 @@ void        setOpenGLRequirements();
 
 void        cleanup();
 
-void        makeContextCurrent(GLFWwindow* window);
+void        makeContextCurrent();
 
 void        run(GLFWwindow* window);
