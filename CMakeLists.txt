@@ -26,7 +26,7 @@ file(GLOB_RECURSE sources_test src/test/*.cpp)
 add_executable(hawk ${sources})# ${data})
 
 # just for example add some compiler flags
-target_compile_options(hawk PUBLIC -std=c++1y -Wall -Wfloat-conversion -Wextra -Wpedantic -Wconversion -Wshadow -Werror)
+target_compile_options(hawk PUBLIC -std=c++17 -Wall -Wfloat-conversion -Wextra -Wpedantic -Wconversion -Wshadow -Werror)
 
 # this lets me include files relative to the root source directory with a <> pair
 target_include_directories(hawk PUBLIC src/main)
